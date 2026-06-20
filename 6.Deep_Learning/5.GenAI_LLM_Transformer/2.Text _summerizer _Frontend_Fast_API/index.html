@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Summarizer</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Text Summarizer</h1>
+      <h3>using HuggingFace Transformer</h3>
+      <p>Write or Paste your content below for quick summarization.</p>
+
+      <form id="summarization-form">
+        <textarea
+          id="dialogue-input"
+          placeholder="Enter your content here..."
+          required
+        ></textarea>
+        <button type="submit">✨ Summarize</button>
+      </form>
+
+      <div class="summary-output">
+        <h3 id="summary-heading">Content Summary</h3>
+        <p id="summary-text"></p>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById("summarization-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Get references to elements
+          const dialogueInput = document.getElementById("dialogue-input");
+          const summaryText = document.getElementById("summary-text");
+          const submitButton = e.target.querySelector("button");
+
+          const dialogue = dialogueInput.value.trim();
+          if (!dialogue) return;
+
+          // Show processing message and disable button
+          summaryText.innerText = "Processing...";
+          submitButton.disabled = true;
+
+          try {
+            // Send dialogue to backend
+            const response = await fetch("/summarize/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ dialogue }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Server error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            summaryText.innerText = data.summary || "No summary returned.";
+          } catch (err) {
+            // Show any error messages
+            summaryText.innerText = `Error: ${err.message}`;
+          } finally {
+            // Re-enable the button
+            submitButton.disabled = false;
+          }
+        });
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+        overflow-x: hidden;
+        color: #4b3a2f;
+
+        /* 👇 FIX: Updated URL path to point to the newly mounted static route */
+        background:
+          linear-gradient(rgba(255, 248, 240, 0.32), rgba(255, 248, 240, 0.32)),
+          url("/static/background.png");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 920px;
+        padding: 40px 42px 34px;
+        border-radius: 30px;
+        background: rgba(255, 251, 245, 0.92);
+        border: 1px solid rgba(72, 46, 19, 0.32);
+        box-shadow:
+          0 24px 60px rgba(92, 66, 44, 0.18),
+          inset 0 1px 0 rgba(113, 62, 62, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.28s ease,
+          box-shadow 0.28s ease;
+      }
+
+      .container:hover {
+        transform: translateY(-4px);
+        box-shadow:
+          0 28px 72px rgba(92, 66, 44, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(255, 255, 255, 0.55),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(196, 154, 105, 0.06),
+            transparent 35%
+          );
+        pointer-events: none;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        font-weight: 500;
+        line-height: 1.1;
+        text-align: center;
+        color: #4a2f20;
+        margin-bottom: 12px;
+        letter-spacing: 0.2px;
+      }
+
+      h3 {
+        text-align: center;
+        font-size: 1.08rem;
+        font-weight: 500;
+        color: #9a6b3e;
+        margin-bottom: 12px;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      p {
+        text-align: center;
+        font-size: 1rem;
+        line-height: 1.75;
+        color: #6a5a4d;
+        margin-bottom: 22px;
+      }
+
+      #summarization-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        margin-top: 8px;
+      }
+
+      #dialogue-input {
+        width: min(100%, 760px);
+        min-height: 250px;
+        resize: vertical;
+        border-radius: 16px;
+        border: 1.5px solid rgba(194, 164, 132, 0.55);
+        background: rgba(255, 255, 255, 0.96);
+        color: #4b3a2f;
+        font-size: 1rem;
+        line-height: 1.7;
+        padding: 18px 20px;
+        outline: none;
+        box-shadow:
+          0 8px 18px rgba(92, 66, 44, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease,
+          background 0.22s ease;
+      }
+
+      #dialogue-input::placeholder {
+        color: #a69484;
+      }
+
+      #dialogue-input:hover {
+        transform: translateY(-2px);
+        border-color: rgba(164, 119, 71, 0.78);
+        box-shadow:
+          0 12px 22px rgba(92, 66, 44, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      }
+
+      #dialogue-input:focus {
+        border-color: #c08a52;
+        background: #ffffff;
+        box-shadow:
+          0 0 0 4px rgba(192, 138, 82, 0.14),
+          0 14px 28px rgba(92, 66, 44, 0.11),
+          inset 0 1px 0 rgba(255, 255, 255, 1);
+      }
+
+      button[type="submit"] {
+        min-width: 235px;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 1.03rem;
+        font-weight: 600;
+        color: #fffaf7;
+        background: linear-gradient(
+          135deg,
+          #b77a41 0%,
+          #c88b52 46%,
+          #a86b35 100%
+        );
+        box-shadow:
+          0 14px 28px rgba(143, 92, 41, 0.28),
+          0 8px 16px rgba(92, 66, 44, 0.12);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          filter 0.22s ease,
+          letter-spacing 0.22s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      button[type="submit"]::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        left: -140%;
+        width: 70%;
+        background: linear-gradient(
+          120deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.38) 50%,
+          transparent 100%
+        );
+        transform: skewX(-20deg);
+        transition: left 0.7s ease;
+      }
+
+      button[type="submit"]:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+          0 18px 32px rgba(143, 92, 41, 0.34),
+          0 10px 18px rgba(92, 66, 44, 0.16);
+        filter: brightness(1.03);
+        letter-spacing: 0.4px;
+      }
+
+      button[type="submit"]:hover::after {
+        left: 140%;
+      }
+
+      button[type="submit"]:active {
+        transform: translateY(-1px) scale(0.99);
+      }
+
+      .summary-output {
+        width: min(100%, 760px);
+        margin: 18px auto 0;
+        padding: 22px 24px 24px;
+        border-radius: 18px;
+        background: rgba(255, 251, 245, 0.98);
+        border: 1px solid rgba(194, 164, 132, 0.28);
+        box-shadow:
+          0 10px 24px rgba(92, 66, 44, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease;
+      }
+
+      .summary-output:hover {
+        transform: translateY(-2px);
+        border-color: rgba(168, 107, 53, 0.34);
+        box-shadow:
+          0 16px 30px rgba(92, 66, 44, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      }
+
+      #summary-heading {
+        text-align: left;
+        margin-bottom: 14px;
+        color: #4a2f20;
+        font-size: 1.35rem;
+        font-family: Georgia, "Times New Roman", serif;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      #summary-heading::after {
+        content: "📄";
+        font-size: 1rem;
+        opacity: 0.7;
+      }
+
+      #summary-text {
+        text-align: left;
+        color: #6a5a4d;
+        font-size: 1rem;
+        line-height: 1.85;
+        min-height: 38px;
+        white-space: pre-wrap;
+      }
+
+      #summary-text:empty::before {
+        content: "Your summary will appear here after clicking the button.";
+        color: #9b8a7c;
+        font-style: italic;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 14px;
+          background-attachment: scroll;
+        }
+
+        .container {
+          padding: 26px 18px 22px;
+          border-radius: 24px;
+        }
+
+        #dialogue-input,
+        .summary-output {
+          width: 100%;
+        }
+
+        #dialogue-input {
+          min-height: 200px;
+        }
+
+        button[type="submit"] {
+          width: 100%;
+          min-width: unset;
+        }
+
+        h1 {
+          font-size: 2.1rem;
+        }
+
+        #summary-heading {
+          font-size: 1.18rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px 14px 18px;
+        }
+
+        h3 {
+          font-size: 0.98rem;
+        }
+
+        p {
+          font-size: 0.94rem;
+        }
+
+        #dialogue-input {
+          min-height: 170px;
+          padding: 15px 16px;
+        }
+
+        .summary-output {
+          padding: 18px 16px 20px;
+        }
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "layout.html" %} {% block content%} {{header | safe}}
+
+<h2>Hello ! How Are You</h2>
+{% if name%}
+<h1>{{name}}</h1>
+{% else %}
+<h1>Unknown</h1>
+{% endif%}
+
+<ul>
+  {% for friend in friends %}
+  <li>{{friend}}</li>
+  {% endfor%}
+</ul>
+
+{% endblock%}

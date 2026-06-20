@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      {% block navbar%}
+      <nav style="background: #333; padding: 10px; text-align: center">
+        <a
+          href="#"
+          style="
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+          "
+          >Home</a
+        >
+        <a
+          href="#"
+          style="
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+          "
+          >About</a
+        >
+        <a
+          href="#"
+          style="
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+          "
+          >Services</a
+        >
+        <a
+          href="#"
+          style="
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+          "
+          >Contact</a
+        >
+      </nav>
+      {% endblock%}
+    </div>
+
+    <div>{% block content%} {% endblock%}</div>
+    <div>
+      {% block footer%}
+      <footer
+        style="
+          background: #333;
+          color: #fff;
+          text-align: center;
+          padding: 10px;
+          font-size: 14px;
+        "
+      >
+        © 2026 My Website | Built with ❤️
+      </footer>
+      {%endblock%}
+    </div>
+  </body>
+</html>

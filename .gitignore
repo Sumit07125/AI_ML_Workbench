@@ -1,0 +1,92 @@
+# =========================
+# Python / Jupyter
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Notebook outputs / temporary files
+*.nbconvert.ipynb
+*.log
+*.tmp
+*.swp
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.env
+*.secrets
+*.secret
+
+# virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# =========================
+# Model / training artifacts
+# =========================
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+*.h5
+
+checkpoints/
+checkpoint-*/
+
+# =========================
+# Data / datasets / large files
+# =========================
+data/
+Data/
+DataSet/
+Dataset/
+Datasets/
+pdfs/
+pdf/
+images/
+img/
+img_align_celeba/
+vector_store/
+result/
+saved_summary_model/
+
+# Common data files you do not want in git
+*.csv
+*.tsv
+*.jsonl
+*.parquet
+*.feather
+*.xlsx
+*.xls
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# =========================
+# Project-specific generated files
+# =========================
+agno.db
+*.db
+runs/

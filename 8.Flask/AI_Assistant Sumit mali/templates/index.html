@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personal Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1 class="main-heading">AI Personal Assistant</h1>
+
+    <div class="container">
+        <h2>Ask Anything</h2>
+        <form id="askForm" method="post" action="/ask">
+            <input type="text" name="question" placeholder="Ask anything..." required value="{{ question }}">
+            <button type="submit">Ask</button>
+        </form>
+
+        {% if result %}
+        <div class="ai-response">
+            {{ result | safe }}
+        </div>
+        {% endif %}
+
+        <hr>
+
+        <h2>Summarize Email</h2>
+        <form id="emailForm" method="post" action="/summarize">
+            <textarea name="email" placeholder="Paste your email here.." required>{{ email }}</textarea>
+            <button type="submit">Summarize</button>
+        </form>
+
+        {% if ans %}
+        <div class="ai-response">
+            {{ ans | safe }}
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
